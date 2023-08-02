@@ -1,0 +1,73 @@
+---
+icon: book
+---
+
+These are the important initial setup which is required to be done, before accessing the provided utility codes.
+
+---
+
+## Add the Jitpack repository
+
+<Tabs>
+<Tab title="Past">
+
+```groovy #4 build.gradle (root)
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+</Tab>
+
+<Tab title="Gradle 8.0 or higher">
+
+```groovy #4,11 settings.gradle
+pluginManagement {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+</Tab>
+
+</Tabs>
+
+---
+
+## Add dependency and module
+
+<Warning>
+Currently, there's no stable release versions.
+</Warning>
+
+```groovy
+implementation("com.github.BlueWhaleYT.WhaleUtils:<module-name>:<version>")
+```
+
+---
+
+## Integrate Kotlin to Java projects
+
+<Accordion title="Notes for Java developers">
+If you are developing projects in Java, while you want to use utlity codes provided by this library, I'd say... It's **POSSIBLE!** as this library is Java-friendly.
+
+Integrating Kotlin to your Java projects is that simple, just by adding following setups.
+
+<Snippet file="gradle/snippet-kt-integration.mdx" />
+
+More information and guides for Java projects, please refer to this page:
+
+<Tip>
+[Guides for Java Developers](/guides-for-java-devs.mdx)
+</Tip>
+</Accordion>

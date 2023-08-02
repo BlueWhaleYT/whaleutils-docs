@@ -1,0 +1,96 @@
+---
+title: API Request
+icon: book
+---
+
+OkHttp is useful and especially when doing API request to fetch data via the network. However, the implementation of OkHttp code is a bit complex. Therefore, we made a util for this library.
+
+<Snippet file="snippet-desktop-only.mdx" />
+
+---
+
+## Request Configuration
+
+The configuration below, doesn't really like the parameters to be set in a method. But, you will need them as variables when starting requests. 
+
+<ResponseField name="method" type="Methods" required>
+  The HTTP method to use e.g. `GET`.
+</ResponseField>
+<ResponseField name="url" type="String" required>
+  The API url to be fetched.
+</ResponseField>
+<ResponseField name="headers" type="String">
+  The headers to be applied, use `setHeaders("key", "value")`.
+</ResponseField>
+<ResponseField name="parameters" type="String">
+  The parameters to be applied, use `setParameters("key", "value")`. You can use it for query, path, body and form parameters.
+</ResponseField>
+
+---
+
+## Set headers and parameters
+
+Set headers and parameters is that simple, just by following the format:
+
+```kt
+val headers = okhttp.setHeaders(
+    "key1", "value1",
+    "key2", "value2"
+)
+val parameters = okhttp.setParameters(
+    "key1", "value1",
+    "key2", "value2"
+)
+```
+
+<RequestExample>
+```kt Kotlin
+val url = "https://api.github.com/user"
+val okhttp = OkHttpUtils(this, url)
+
+val headers = okhttp.setHeaders(
+    "Authorization", "Bearer <YOUR_API_KEY>"
+)
+
+okhttp.startRequest(
+    method = Methods.GET,
+    headers = headers,
+    listener = object: OkHttpListener {
+        override fun onSuccess(response: Response, message: String) {
+            // actions to do if get response successfully
+
+            Log.d("response", "Response: $message, Status: ${response.code}")
+        }
+        override fun onFailure(response: Response?, error: String) {
+            // actions to do if get response failed
+
+            Log.e("error", "Error: $error")
+        }
+    }
+)
+```
+
+```java Java
+String url = "https://api.github.com/user";
+OkHttpUtils okhttp = new OkHttpUtils(this, url);
+
+String headers = okhttp.setHeaders(
+    "Authorization", "Bearer <YOUR_API_KEY>"
+)
+
+okhttp.startRequest(Methods.GET, headers, new OkHttpListener() {
+    @Override
+    public void onSuccess(Response response, String message) {
+        // actions to do if get response successfully
+
+        Log.d("response", "Response: " + message + ", Status: " + response.code);
+    }
+    @Override
+    public void onFailure(Response response, String error) {
+        // actions to do if get response failed
+
+        Log.e("error", "Error: " + error);
+    }
+});
+```
+</RequestExample>

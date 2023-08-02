@@ -1,0 +1,95 @@
+---
+title: Guides for Java Developers
+icon: book
+---
+
+This is a simple guide for Java Developers using this library handly and easier to understand.
+
+<Warning>
+The development of Kotlin is mushrooming rapidy, but Java **NEVER DIE!**
+</Warning>
+
+---
+
+## Integration
+
+Add following codes to appropriate build files and click `Sync Now` to sync your projects within Kotlin.
+
+<Snippet file="gradle/snippet-kt-integration.mdx" />
+
+---
+
+## Kotlin Syntaxes
+
+WhaleUtils **is completely written in Kotlin**, which may not compatible to Java, as you need to follow the Java syntax to use the library written in Kotlin.
+
+### Companion
+
+<Tabs>
+<Tab title="Source code">
+```kt
+class Whale {
+    companion object {
+        fun sleep() {
+            // ...
+        }
+    }
+}
+```
+</Tab>
+
+<Tab title="Solution">
+```java
+Whale.Companion.sleep();
+```
+</Tab>
+</Tabs>
+
+### INSTANCE
+
+<Tabs>
+<Tab title="Source code">
+```kt
+object Whale {
+    fun eat() {
+        // ...
+    }
+}
+```
+</Tab>
+<Tab title="Solution">
+```java 
+Whale.INSTANCE.eat();
+```
+</Tab>
+</Tabs>
+
+### Extension
+
+Extension is mainly designated for Kotlin, therefore, Java can't directly access the methods of extension without an `Object`. Instead, the Kotlin plugin will generate a new java class file automatically.
+
+If you see kind of files e.g. `FileExt.kt`:
+
+<Tabs>
+<Tab title="Source code">
+
+```kt FileExt.kt
+fun String.getFileContent(): String {
+    return ...
+}
+```
+
+</Tab>
+
+<Tab title="Solution">
+The class to be used, is the **File name** + `Kt` as the suffix.
+
+```java
+String content = FileExtKt.getFileContent(str);
+```
+</Tab>
+</Tabs>
+
+<Tip>
+The reciever will be taken as the first parameter. e.g. `String.getFileContent()`, the reciever is `String`. In Java, it will become the first parameter i.e. the `str` of `getFileContent()`.
+</Tip>

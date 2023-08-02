@@ -1,0 +1,41 @@
+---
+icon: book
+---
+
+Do you feel fraustrated on catching exceptions for some methods that are needed? Normally, you always need them to do so.
+
+<Accordion title="Legacy methods">
+#### Use `Throws` annotation
+
+```kt
+@Throws(Exception::class.java)
+fun method() {
+    // ...
+}
+```
+
+#### Use `try-catch` method
+```kt
+fun method() {
+    try {
+        // ...
+    } catch (e: Exception) {
+        // ...
+    }
+}
+```
+</Accordion>
+
+## Use `catchException()` function!
+
+It's easy to use, when you are in `Activity`:
+
+```kt
+catchException {
+    // ...
+}
+```
+
+<Note>
+the `tag` if not specified, will use the current Java class name.
+</Note>

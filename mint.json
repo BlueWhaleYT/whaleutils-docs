@@ -1,11 +1,16 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "WhaleUtils",
   "logo": {
     "dark": "/logo/dark.svg",
     "light": "/logo/light.svg"
   },
   "favicon": "/favicon.png",
+  "feedback": {
+    "thumbsRating": true,
+    "suggestEdit": true,
+    "raiseIssue": true
+  },
   "colors": {
     "primary": "#9563FF",
     "light": "#AE87FF",
@@ -18,65 +23,84 @@
       "to": "#9563FF"
     }
   },
+  "topbarCtaButton": {
+    "url": "https://github.com/BlueWhaleYT/WhaleUtils",
+    "type": "github"
+  },
   "topbarLinks": [
     {
-      "name": "Support",
-      "url": "mailto:hi@mintlify.com"
+      "name": "API Docs",
+      "url": "https://whaleutils.netlify.app/docs"
+    }, {
+      "name": "Jitpack",
+      "url": "https://jitpack.io/#BlueWhaleYT/WhaleUtils"
     }
   ],
-  "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+  "topAnchor": {
+    "name": "Home",
+    "icon": "building"
   },
-  "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
   "anchors": [
     {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
+      "name": "module: [common]",
+      "icon": "cube",
+      "url": "pages/modules/common"
     },
     {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
+      "name": "module: [design]",
+      "icon": "swatchbook",
+      "url": "pages/modules/design"
     },
     {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
+      "name": "module: [git]",
+      "icon": "git-alt",
+      "url": "pages/modules/git"
+    },
+    {
+      "name": "module: [network]",
+      "icon": "globe",
+      "url": "pages/modules/network"
     }
   ],
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "quickstart", "development"]
+      "pages": ["pages/introduction", "pages/quickstart", "pages/guides-for-java-devs"]
+    },
+
+    {
+      "group": "Uncategorized",
+      "pages": ["pages/modules/common/uncategorized/catch-exception"]
     },
     {
-      "group": "Essentials",
-      "pages": ["essentials/markdown", "essentials/code", "essentials/images", "essentials/settings", "essentials/navigation"]
+      "group": "Animations",
+      "pages": ["pages/modules/common/animations/easy-to-use-animation"]
     },
+
     {
-      "group": "API Documentation",
-      "pages": ["api-reference/authentication"]
+      "group": "Widgets",
+      "pages": [{
+          "group": "RecyclerView",
+          "pages": ["pages/modules/design/widgets/recyclerview/reusable-adapter"]
+      }]
     },
+
     {
-      "group": "Endpoint Examples",
-      "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/update",
-        "api-reference/endpoint/delete"
-      ]
+      "group": "Commands",
+      "pages": ["pages/modules/git/commands/clone"]
+    },
+
+    {
+      "group": "API Request",
+      "pages": [{
+        "group": "OkHttp",
+        "pages": ["pages/modules/network/api-request/okhttp/api-request"]
+      }]
     }
   ],
-  "footerSocials": {
-    "twitter": "https://twitter.com/mintlify",
-    "github": "https://github.com/mintlify",
-    "linkedin": "https://www.linkedin.com/company/mintsearch"
+  "api": {
+    "auth": {
+      "method": "bearer"
+    }
   }
 }

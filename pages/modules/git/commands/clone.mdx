@@ -1,0 +1,56 @@
+---
+title: Clone remote repository
+icon: book
+---
+
+In Git, if we need to use clone a repository from remote to local, we will use `clone` command.
+
+---
+
+## Regular cloning
+
+You can simply use `git.cloneRepository()` if you just need to clone repositories without any progress fetching.
+
+<Tabs>
+<Tab title="Kotlin">
+```kt
+lifecycleScope.launch(Dispatchers.IO) {
+    git.cloneRepository()
+}
+```
+</Tab>
+<Tab title="Java">
+```java
+ExecutorService executor = Executors.newSingleThreadExecutor();
+executor.execute(new Runnable() {
+    @Override
+    public void run() {
+        git.cloneRepository();
+    }
+});
+```
+</Tab>
+</Tabs>
+
+## Display the progress of cloning
+
+<Tabs>
+<Tab title="Kotlin">
+```kt
+lifecycleScope.launch(Dispatchers.IO) {
+    git.cloneRepository()
+}
+```
+</Tab>
+<Tab title="Java">
+```java
+ExecutorService executor = Executors.newSingleThreadExecutor();
+executor.execute(new Runnable() {
+    @Override
+    public void run() {
+        git.cloneRepository();
+    }
+});
+```
+</Tab>
+</Tabs>

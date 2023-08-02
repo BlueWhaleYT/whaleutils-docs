@@ -1,0 +1,20 @@
+<CodeGroup>
+```kt build.gradle (root)
+buildscript {
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10"
+    }
+}
+```
+```kt build.gradle
+plugins {
+    //...
+    id 'kotlin-android'
+}
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.30"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+}
+```
+</CodeGroup>

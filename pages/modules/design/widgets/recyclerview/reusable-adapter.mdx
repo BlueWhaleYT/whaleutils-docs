@@ -1,0 +1,263 @@
+---
+icon: book
+---
+
+Have you ever thought of a reusable adapter? As its name suggests, reusable adapter means **you are no longer required to write an external adapter class**. Instead, you can quickly start a callback with the adapter to directly bind your views to the `RecyclerView`.
+
+<Snippet file="snippet-desktop-only.mdx" />
+
+---
+
+## Migrate to custom `RecyclerView`
+
+As the `CustomAdapter` only accepts the implementation of `RecyclerView` of this module, you will need to migrate the original one to the target one. Meanwhile, the migration is **SUPER EASY!**
+
+Replace `androidx.recyclerview.widget.RecyclerView` with `com.bluewhaleyt.design.widget.recyclerview.RecyclerView`.
+
+```xml
+<com.bluewhaleyt.design.widget.recyclerview.RecyclerView
+    android:id="@+id/recycler_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+```
+
+---
+
+## Prepare a `data class`
+
+As the purpose of integrating Kotlin or already using Kotlin, we're highly recommended to use `data class` instead of Java's regular getters and setters.
+
+For example, you can design your data class like below:
+
+```kt
+data class Person(
+    val name: String,
+    val age: Int,
+    val isMarried: Boolean
+)
+```
+
+<Note>
+If you write the `data class` in Kotlin, you can directly use `setXXX()` and `getXXX()` methods in Java, which will be **automatically generated**.
+</Note>
+
+---
+
+## Add data to a `list`
+
+After we finished making a `data class`, we can now create a list and put data into the list, for the purpose of displaying all of them later we do stuff to the `RecyclerView`.
+
+For example, we created three persons.
+
+```kt
+val list = mutableListOf<Person>()
+list.add(Person("Steve", 34, true))
+list.add(Person("Mary", 15, false))
+list.add(Person("Heidi", 25, false))
+```
+
+---
+
+## Setup a callback
+
+The callback we're going to setup, is essential and important, this is the core controlling and managing the behavior and events of the `RecyclerView`.
+
+### Create a view
+
+<Card icon="circle-xmark" color="#ff4757">
+In the past, if we need to create and initialize the view in the adapter, we will need to use these functions:
+
+```kt
+override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityViewHolder
+override fun onBindViewHolder(holder: ViewHolder, position: Int)
+```
+</Card>
+
+Now, if we come to our `CustomAdapter`, we just need to focus `onCreateView()` function and the `ViewHolder` is provided by default.
+
+```kt
+val callback = object : AdapterCallback<Person> {
+    override fun onCreateView(itemView: View, data: Person, itemIndex: Int) {
+        // handle your views here..
+    }
+}
+```
+
+In addition, you need to specific which XML layout file you want to use, we will talk this later.
+
+<Note>
+`itemIndex` means the `position` we used.
+</Note>
+
+---
+
+## Setup an adapter
+
+The adapter and its behaviors can be directly written in your current file, for the functions that are available, please look at:
+
+<Snippet file="snippet-see-api-docs.mdx" />
+
+```kt
+val adapter = CustomAdapter<Person>(this, recyclerView)
+adapter.setCallback(callback)
+       .setLayoutView(R.layout.layout_list_item_1)
+recyclerView.setAdapter(adapter, list)
+```
+
+<Warning>
+Please ensure the `RecyclerView` you've imported and used in XML or etc, is provided by this module, not the original one. You will encounter `ClassCastException` if you didn't pay attention to.
+</Warning>
+
+---
+
+## Search and filter the `RecyclerView`
+
+<Card title="Past Practice" icon="link" href="https://developer.android.com/reference/android/widget/Filterable">
+In the past, if we need to implement a search system to filter the `list`, we write them like below:
+
+```kt
+override fun getFilter(): Filter {
+    return object : Filter() {
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
+            // ...
+        }
+        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+            // ...
+        }
+    }
+}
+```
+Also, you need to manually handle the filter actions, which is too fraustrated and fatigued.
+
+</Card>
+
+In light of this, we provided simple functions to implement simple search filtering.
+
+### Adjust the adapter to be filterable
+
+Before implementing the search filtering, you need to set the adapter to be filterable by following code:
+
+```kt
+adapter.setFilterable(true)
+```
+
+### Prepare a search input
+
+Next, you may need to use some components that are for handling the search inputs. For example, `EditText`, `SearchView` or etc.
+
+In this documentation, we will use `EditText` as the showcase.
+
+#### Filter the list on search
+
+If you want to filter all the fields of the `data class`, you can simply write `adapter.filter(queryText)`.
+
+```kt
+editText.addTextChangedListener(object : TextWatcher {
+    override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+    override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+        adapter.filter(charSequence)
+    }
+    override fun afterTextChanged(editable: Editable) {}
+})
+```
+
+#### Filter only specific fields
+
+<Card title="Rollback" icon="rotate-left" href="#prepare-a-data-class">
+Rollback to the `data class Person` our formerly made:
+
+```kt
+data class Person(
+    val name: String,
+    val age: Int,
+    val isMarried: Boolean,
+    val country: String, // add one more field
+)
+```
+</Card>
+
+For example, if you just want to filter with the field `name`, you can do following:
+
+```kt
+adapter.filter(charSequence, "name")
+```
+
+More fields is also supported:
+
+```kt
+adapter.filter(charSequence, "name", "country")
+```
+
+#### Highlight the search keywords on the list
+
+First, you will need to get the query text from the input:
+
+```kt
+val query = editText.text.toString()
+```
+
+Then, go back to the `onCreateView()` of the callback, we can simply highlight by following codes:
+
+```kt
+override fun onCreateView(itemView: View, data: Person, itemIndex: Int) {
+    val tv1 = itemView.findViewById<TextView>(R.id.tv_text_1)
+    tv1.text = data.getName().highlightText(query, Color.RED)
+}
+```
+
+<RequestExample>
+```kt Kotlin
+val list = mutableListOf<Person>()
+list.add(Person("Steve", 34, true))
+list.add(Person("Mary", 15, false))
+list.add(Person("Heidi", 25, false))
+
+val callback = object : AdapterCallback<Person> {
+    override fun onCreateView(itemView: View, data: Person, itemIndex: Int) {
+        val tv1 = itemView.findViewById<TextView>(R.id.tv_text_1)
+        val tv2 = itemView.findViewById<TextView>(R.id.tv_text_2)
+
+        tv1.text = data.name
+        tv2.text = data.age.toString()
+    }
+}
+
+val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+val adapter = CustomAdapter<Person>(this)
+adapter.setCallback(callback)
+       .setLayoutView(R.layout.layout_list_item_1)
+recyclerView.setAdapter(adapter, list)
+```
+
+```java Java
+ArrayList<Person> list = new ArrayList<Person>;
+list.add(new Person("Steve", 34, true))
+list.add(new Person("Mary", 15, false))
+list.add(new Person("Heidi", 25, false))
+
+AdapterCallback<Person> callback = new AdapterCallback<Person>() {
+    @Override
+    public void onCreateView(@NonNull View itemView, Person data, int itemIndex) {
+        TextView tv1 = itemView.findViewById(R.id.tv_text_1);
+        TextView tv2 = itemView.findViewById(R.id.tv_text_2);
+
+        tv1.setText(data.getName());
+        tv2.setText(String.valueOf(data.getAge()));
+    }
+    @Override
+    public void onItemClick(@NonNull View itemView, Person data, int itemIndex) {
+        // nothing to do
+    }
+    @Override
+    public void onItemLongClick(@NonNull View itemView, Person data, int itemIndex) {
+        // nothing to do
+    }
+};
+
+RecyclerView recyclerView = findViewById(R.id.recycler_view);
+CustomAdapter adapter = CustomAdapter<Person>(this);
+adapter.setCallback(callback)
+       .setLayoutView(R.layout.layout_list_item_1);
+recyclerView.setAdapter(adapter, list);
+```
+</RequestExample>

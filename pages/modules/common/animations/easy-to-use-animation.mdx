@@ -1,0 +1,28 @@
+---
+icon: book
+---
+
+We are frastrated to manually create animations through XML `anim/` or programmatically methods. Thus, we created `AnimationUtils` that fasten the efficency and quickly apply an animation to the target views.
+
+---
+
+## Apply animation
+
+See available animations:
+
+<Snippet file="snippet-see-api-docs.mdx" />
+
+```kt
+val anim = AnimationUtils(this)
+anim.applyAnimation(view, Animations.BOUNCE_IN)
+```
+
+### Actions to do after the animation is played
+
+You can set actions when the animation is finished playing, for example:
+
+```kt
+anim.applyAnimation(view, Animations.BOUNCE_OUT) {
+    // actions to do..
+}
+```
