@@ -4,6 +4,8 @@ icon: book
 
 Do you feel fraustrated on catching exceptions for some methods that are needed? Normally, you always need them to do so.
 
+<Snippet file="snippet-rec-for-kt.mdx" />
+
 <Accordion title="Legacy methods">
 
 <Tabs>
@@ -43,9 +45,11 @@ fun method() {
 ```
 </Accordion>
 
+---
+
 ## Use `catchException()` function!
 
-It's easy to use, just like a brand new syntax candy in Kotlin:
+It's easy to use, just like a brand new syntactic sugar in Kotlin:
 
 <CodeGroup>
 ```kt Kotlin
@@ -56,6 +60,30 @@ catchException {
 ```java Java
 CommonExtKt.catchException(continuation -> {
     // ...
+    return null;
+});
+```
+</CodeGroup>
+
+## Custom exceptions
+
+If you want to implement exceptions, you can do following:
+
+<CodeGroup>
+```kt Kotlin
+catchException(
+    catchAction = { e -> Toast.makeText(this, e.message, Toast.LENGTH_SHORT) }
+) {
+    // try ...
+}
+```
+
+```java Java
+CommonExtKt.catchException((e, continuation) -> {
+    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT);
+    return null;
+}, continuation -> {
+    // try
     return null;
 });
 ```

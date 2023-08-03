@@ -23,7 +23,9 @@ Replace `androidx.recyclerview.widget.RecyclerView` with `com.bluewhaleyt.design
 
 ---
 
-## Prepare a `data class`
+## Regular usage
+
+### Prepare a `data class`
 
 As the purpose of integrating Kotlin or already using Kotlin, we're highly recommended to use `data class` instead of Java's regular getters and setters.
 
@@ -41,9 +43,7 @@ data class Person(
 If you write the `data class` in Kotlin, you can directly use `setXXX()` and `getXXX()` methods in Java, which will be **automatically generated**.
 </Note>
 
----
-
-## Add data to a `list`
+### Add data to a `list`
 
 After we finished making a `data class`, we can now create a list and put data into the list, for the purpose of displaying all of them later we do stuff to the `RecyclerView`.
 
@@ -58,17 +58,17 @@ list.add(Person("Heidi", 25, false))
 
 ---
 
-## Setup a callback
+### Setup a callback
 
 The callback we're going to setup, is essential and important, this is the core controlling and managing the behavior and events of the `RecyclerView`.
 
-### Create a view
+#### Create a view
 
 <Card icon="circle-xmark" color="#ff4757">
 In the past, if we need to create and initialize the view in the adapter, we will need to use these functions:
 
 ```kt
-override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityViewHolder
+override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
 override fun onBindViewHolder(holder: ViewHolder, position: Int)
 ```
 </Card>
@@ -91,7 +91,7 @@ In addition, you need to specific which XML layout file you want to use, we will
 
 ---
 
-## Setup an adapter
+### Setup an adapter
 
 The adapter and its behaviors can be directly written in your current file, for the functions that are available, please look at:
 
@@ -133,7 +133,7 @@ Also, you need to manually handle the filter actions, which is too fraustrated a
 
 In light of this, we provided simple functions to implement simple search filtering.
 
-### Adjust the adapter to be filterable
+#### Adjust the adapter to be filterable
 
 Before implementing the search filtering, you need to set the adapter to be filterable by following code:
 
@@ -141,13 +141,13 @@ Before implementing the search filtering, you need to set the adapter to be filt
 adapter.setFilterable(true)
 ```
 
-### Prepare a search input
+#### Prepare a search input
 
 Next, you may need to use some components that are for handling the search inputs. For example, `EditText`, `SearchView` or etc.
 
 In this documentation, we will use `EditText` as the showcase.
 
-#### Filter the list on search
+##### Filter the list on search
 
 If you want to filter all the fields of the `data class`, you can simply write `adapter.filter(queryText)`.
 
@@ -161,7 +161,7 @@ editText.addTextChangedListener(object : TextWatcher {
 })
 ```
 
-#### Filter only specific fields
+##### Filter only specific fields
 
 <Card title="Rollback" icon="rotate-left" href="#prepare-a-data-class">
 Rollback to the `data class Person` our formerly made:
@@ -188,7 +188,7 @@ More fields is also supported:
 adapter.filter(charSequence, "name", "country")
 ```
 
-#### Highlight the search keywords on the list
+##### Highlight the search keywords on the list
 
 First, you will need to get the query text from the input:
 
@@ -203,6 +203,97 @@ override fun onCreateView(itemView: View, data: Person, itemIndex: Int) {
     val tv1 = itemView.findViewById<TextView>(R.id.tv_text_1)
     tv1.text = data.getName().highlightText(query, Color.RED)
 }
+```
+
+---
+
+## Different viewtypes
+
+Here comes a question, how to implement different viewtypes? For example, you may want a main view and a header view, like if you are working on a chat discussion RecyclerView list. If we still use `setLayoutView()`, it will be insufficent for us to handle such cases, as this would be the static declaration to the layout.
+
+### Prepare data classes
+
+Take making a chat list as an example, we will have following data classes:
+
+```kt
+data class Message(val message: String, val sender: String)
+data class Timestamp(val time: Long)
+```
+
+Next, we will declare constants to identify which viewtype is going to be used.
+
+```kt
+object ViewType {
+    const val MESSAGE: Int = 0
+    const val TIMESTAMP: Int = 1
+}
+```
+
+Let's draft the conversation:
+
+```kt
+val chatItems: List<Any> = listOf(
+    Timestamp(1085347200L),
+    Message("Hello", "John"),
+    Timestamp(1685347200L),
+    Message("How are you?", "John"),
+    Message("I'm good. Thanks!", "Alice"),
+)
+```
+
+### Add viewtypes to the adapter
+
+We will use `addViewType()` to dynamically add viewtypes for different layouts.
+
+```kt
+val adapter = CustomAdapter<Any>(this)
+adapter.addViewType(ViewType.MESSAGE, R.layout.layout_chat_message)
+       .addViewType(ViewType.TIMESTAMP, R.layout.layout_chat_timestamp)
+```
+
+### Setup a callback
+
+As always, we need to setup a callback to the adapter, but with a bit difference, we will use `getItemViewType()`. This function will handle which viewtype layouts will be used.
+
+```kt
+adapter.setCallback(object : AdapterCallback<Any> {
+    // ...
+})
+```
+
+#### Determines to use which layout according to the viewtype
+
+```kt
+override fun getItemViewType(data: Any, position: Int): Int {
+    return when (data) {
+        is Message -> ViewType.MESSAGE
+        is Timestamp -> ViewType.TIMESTAMP
+        else -> throw IllegalArgumentException("Invalid item type")
+    }
+}
+```
+
+#### Organize the data to different layouts
+
+We will determine the data's `instance` type to distribute the layouts.
+
+```kt
+override fun onCreateView(itemView: View, data: Any, position: Int) {
+    when (data) {
+        is Message -> {
+            // ...
+        }
+        is Timestamp -> {
+           //...
+        }
+    }
+}
+```
+
+Don't forget to set the adapter to your `RecyclerView`.
+
+```kt
+recyclerView.setAdapter(adapter, chatItems)
 ```
 
 <RequestExample>
@@ -261,3 +352,63 @@ adapter.setCallback(callback)
 recyclerView.setAdapter(adapter, list);
 ```
 </RequestExample>
+
+<ResponseExample>
+
+```kt Kotlin
+data class Message(val message: String, val sender: String)
+data class Timestamp(val time: Long)
+
+object ViewType {
+    const val MESSAGE: Int = 0
+    const val TIMESTAMP: Int = 1
+}
+
+val chatItems: List<Any> = listOf(
+    Timestamp(1085347200L),
+    Message("Hello", "John"),
+    Timestamp(1685347200L),
+    Message("How are you?", "John"),
+    Message("I'm good. Thanks!", "Alice"),
+)
+
+val callback = object : AdapterCallback<Any> {
+    override fun getItemViewType(data: Any, position: Int): Int {
+        return when (data) {
+            is Message -> ViewType.MESSAGE
+            is Timestamp -> ViewType.TIMESTAMP
+            else -> throw IllegalArgumentException("Invalid item type")
+        }
+    }
+    override fun onCreateView(itemView: View, data: Any, position: Int) {
+        when (data) {
+            is Message -> {
+                val tvSender = itemView.findViewById<TextView>(R.id.tv_text_1)
+                val tvMessage = itemView.findViewById<TextView>(R.id.tv_text_2)
+                tvSender.text = data.sender
+                tvMessage.text = data.message
+            }
+            is Timestamp -> {
+                val tvTime = itemView.findViewById<TextView>(R.id.tv_timestamp)
+                tvTime.apply {
+                    val stamp = Timestamp(data.time)
+                    val date = Date(stamp.time)
+
+                    text = date.toString()
+                    setTextColor(Color.GREY)
+                }
+            }
+        }
+    }
+}
+
+val adapter = CustomAdapter<Any>(this)
+adapter.addViewType(ViewType.MESSAGE, R.layout.layout_chat_message)
+       .addViewType(ViewType.TIMESTAMP, R.layout.layout_chat_timestamp)
+       .setCallback(callback)
+
+val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+recyclerView.setAdapter(adapter, chatItems)
+```
+
+</ResponseExample>
