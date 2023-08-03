@@ -5,6 +5,10 @@ icon: book
 Do you feel fraustrated on catching exceptions for some methods that are needed? Normally, you always need them to do so.
 
 <Accordion title="Legacy methods">
+
+<Tabs>
+
+<Tab title="Kotlin">
 #### Use `Throws` annotation
 
 ```kt
@@ -13,6 +17,19 @@ fun method() {
     // ...
 }
 ```
+</Tab>
+
+<Tab title="Java">
+#### Use `throws`
+
+```java
+public void method() throws Exception {
+    // ...
+}
+```
+</Tab>
+
+</Tabs>
 
 #### Use `try-catch` method
 ```kt
@@ -28,14 +45,18 @@ fun method() {
 
 ## Use `catchException()` function!
 
-It's easy to use, when you are in `Activity`:
+It's easy to use, just like a brand new syntax candy in Kotlin:
 
-```kt
+<CodeGroup>
+```kt Kotlin
 catchException {
     // ...
 }
 ```
-
-<Note>
-the `tag` if not specified, will use the current Java class name.
-</Note>
+```java Java
+CommonExtKt.catchException(continuation -> {
+    // ...
+    return null;
+});
+```
+</CodeGroup>

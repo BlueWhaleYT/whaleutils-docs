@@ -8,8 +8,7 @@
   "favicon": "/favicon.png",
   "feedback": {
     "thumbsRating": true,
-    "suggestEdit": true,
-    "raiseIssue": true
+    "suggestEdit": true
   },
   "colors": {
     "primary": "#9563FF",
@@ -69,12 +68,16 @@
     },
 
     {
-      "group": "Uncategorized",
-      "pages": ["pages/modules/common/uncategorized/catch-exception"]
+      "group": "Coroutines",
+      "pages": ["pages/modules/common/coroutines/kt-coroutines"]
     },
     {
       "group": "Animations",
       "pages": ["pages/modules/common/animations/easy-to-use-animation"]
+    },
+    {
+      "group": "Uncategorized",
+      "pages": ["pages/modules/common/uncategorized/catch-exception"]
     },
 
     {
@@ -97,10 +100,5 @@
         "pages": ["pages/modules/network/api-request/okhttp/api-request"]
       }]
     }
-  ],
-  "api": {
-    "auth": {
-      "method": "bearer"
-    }
-  }
+  ]
 }

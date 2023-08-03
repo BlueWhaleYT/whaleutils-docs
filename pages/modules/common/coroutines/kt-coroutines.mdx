@@ -1,0 +1,67 @@
+---
+title: Kotlin Coroutines
+icon: book
+---
+
+Kotlin coroutines is mainly written in Kotlin, which is faster and better for handling the UI changes, without frezzing the UI when trying to process a huge amount of data or accessing the network.
+
+As for the Kotlin coroutines, there are many scopes that you need to pay attention to, as they have different cases when using them:
+
+- `GlobalScope`
+- `CoroutineScope`
+- `lifecycleScope`
+- `viewModelScope`
+
+Therefore, why not a simple util?
+
+{/* <Snippet file="snippet-desktop-only.mdx" /> */}
+
+---
+
+## Using the `CoroutinesUtils`
+
+By using our `CoroutinesUtils` (`JCoroutinesUtils` for Java), will help make us faster handle and achieve **non-blocking and asynchronous execution**.
+
+<CodeGroup>
+```kt Kotlin
+CoroutinesUtils.runOnUI { ... }
+CoroutinesUtils.runInBackground { ... }
+CoroutinesUtils.asyncOnUI { ... }
+CoroutinesUtils.asyncInBackground { ... }
+CoroutinesUtils.withUI { ... }
+CoroutinesUtils.withBackground { ... }
+CoroutinesUtils.withDefault { ... }
+CoroutinesUtils.withUnconfined { ... }
+```
+
+```java Java
+JCoroutinesUtils.runOnUI(() -> { ... });
+JCoroutinesUtils.runInBackground(() -> { ... });
+JCoroutinesUtils.asyncOnUI(() -> { ... });
+JCoroutinesUtils.asyncInBackground(() -> { ... });
+JCoroutinesUtils.withUI(() -> { ... });
+JCoroutinesUtils.withBackground(() -> { ... });
+JCoroutinesUtils.withDefault(() -> { ... });
+JCoroutinesUtils.withUnconfined(() -> { ... });
+```
+</CodeGroup>
+
+### Cancel a job from coroutines
+
+Sometimes, you may need to cancel the job from the coroutines, you can do following:
+
+<CodeGroup>
+```kt Kotlin
+val job = CoroutinesUtils.runOnUI {
+    // ...
+}
+job.cancel()
+```
+
+```java Java
+Job job = JCoroutinesUtils.runOnUI(() -> {
+    // ...
+});
+JCoroutinesUtils.cancel(job);
+```
+</CodeGroup>
