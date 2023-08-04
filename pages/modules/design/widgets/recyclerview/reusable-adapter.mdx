@@ -25,6 +25,8 @@ Replace `androidx.recyclerview.widget.RecyclerView` with `com.bluewhaleyt.design
 
 ## Regular usage
 
+Here are some guides of starting to use the `CustomAdapter`.
+
 ### Prepare a `data class`
 
 As the purpose of integrating Kotlin or already using Kotlin, we're highly recommended to use `data class` instead of Java's regular getters and setters.
@@ -336,13 +338,11 @@ AdapterCallback<Person> callback = new AdapterCallback<Person>() {
         tv2.setText(String.valueOf(data.getAge()));
     }
     @Override
-    public void onItemClick(@NonNull View itemView, Person data, int itemIndex) {
-        // nothing to do
-    }
+    public int getItemViewType(SystemInfo data, int itemIndex) { return 0; }
     @Override
-    public void onItemLongClick(@NonNull View itemView, Person data, int itemIndex) {
-        // nothing to do
-    }
+    public void onItemClick(@NonNull View itemView, Person data, int itemIndex) {}
+    @Override
+    public void onItemLongClick(@NonNull View itemView, Person data, int itemIndex) {}
 };
 
 RecyclerView recyclerView = findViewById(R.id.recycler_view);
@@ -356,9 +356,6 @@ recyclerView.setAdapter(adapter, list);
 <ResponseExample>
 
 ```kt Kotlin
-data class Message(val message: String, val sender: String)
-data class Timestamp(val time: Long)
-
 object ViewType {
     const val MESSAGE: Int = 0
     const val TIMESTAMP: Int = 1
@@ -373,18 +370,18 @@ val chatItems: List<Any> = listOf(
 )
 
 val callback = object : AdapterCallback<Any> {
-    override fun getItemViewType(data: Any, position: Int): Int {
+    override fun getItemViewType(data: Any, itemIndex: Int): Int {
         return when (data) {
             is Message -> ViewType.MESSAGE
             is Timestamp -> ViewType.TIMESTAMP
             else -> throw IllegalArgumentException("Invalid item type")
         }
     }
-    override fun onCreateView(itemView: View, data: Any, position: Int) {
+    override fun onCreateView(itemView: View, data: Any, itemIndex: Int) {
         when (data) {
             is Message -> {
-                val tvSender = itemView.findViewById<TextView>(R.id.tv_text_1)
-                val tvMessage = itemView.findViewById<TextView>(R.id.tv_text_2)
+                val tvSender = itemView.findViewById<TextView>(R.id.tv_sender)
+                val tvMessage = itemView.findViewById<TextView>(R.id.tv_message)
                 tvSender.text = data.sender
                 tvMessage.text = data.message
             }
@@ -395,7 +392,7 @@ val callback = object : AdapterCallback<Any> {
                     val date = Date(stamp.time)
 
                     text = date.toString()
-                    setTextColor(Color.GREY)
+                    setTextColor(Color.GRAY)
                 }
             }
         }
@@ -409,6 +406,59 @@ adapter.addViewType(ViewType.MESSAGE, R.layout.layout_chat_message)
 
 val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
 recyclerView.setAdapter(adapter, chatItems)
+```
+
+```java Java
+class ViewType {
+    public static final int MESSAGE = 0;
+    public static final int TIMESTAMP = 1;
+}
+
+List<Object> list = Arrays.asList(
+    new Timestamp(1085347200L),
+    new Message("Hello", "John"),
+    new Timestamp(1685347200L),
+    new Message("How are you?", "John"),
+    new Message("I'm good. Thanks!", "Alice")
+)
+
+AdapterCallback<Object> callback = new AdapterCallback<Object> {
+    @Override
+    public int getItemViewType(Object data, int itemIndex) {
+        int viewType = -1;
+        if (data instanceof Message) { viewType = ViewType.MESSAGE };
+        else if (data instanceof Timestamp) { viewType = ViewType.TIMESTAMP };
+        else { throw new IllegalArgumentException("Invalid item type") }
+    }
+    @Override
+    public void onCreateView(@NonNull View itemView, Object data, int itemIndex) {
+        if (data instanceof Message) {
+            TextView tvSender = itemView.findViewById(R.id.tv_sender);
+            TextView tvMessage = itemView.findViewById(R.id.tv_message);
+
+            tvSender.setText(data.getSender());
+            tvMessage.setText(data.getMessage());
+
+        } else if (data instanceof Timestamp) {
+            TextView tvTime = itemView.findViewById(R.id.tv_timestamp);
+            Timestamp stamp = new Timestamp(data.getTime());
+            Date date = new Date(stamp.getTime());
+
+            tvTime.setText(data.toString());
+            tvTime.setTextColor(Color.GRAY)
+        }
+    }
+    @Override
+    public void onItemClick(@NonNull View itemView, Person data, int itemIndex) {}
+    @Override
+    public void onItemLongClick(@NonNull View itemView, Person data, int itemIndex) {}
+};
+
+CustomAdapter<Object> adapter = new CustomAdapter<Object>(this);
+adapter.addViewType(ViewType.MESSAGE, R.layout_chat_message)
+       .addViewType(ViewType.TIMESTAMP, R.layout_chat_timestamp)
+       .setCallback(callback);
+recyclerView.setAdapter(adapter, list);
 ```
 
 </ResponseExample>

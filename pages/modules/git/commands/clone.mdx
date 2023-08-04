@@ -13,7 +13,7 @@ You can simply use `git.cloneRepository()` if you just need to clone repositorie
 
 <CodeGroup>
 ```kt Kotlin
-CoroutinesUtils.runInBackground {
+runInBackground {
     git.cloneRepository()
 }
 ```
@@ -29,15 +29,15 @@ JCoroutinesUtils.runInBackground(() -> {
 
 <CodeGroup>
 ```kt Kotlin
-CoroutinesUtils.runInBackground {
+runInBackground {
     val writer = PrintWriter(object : OutputStream() {
         override fun write(p0: Int) {
-            CoroutinesUtils.runOnUI {
+            runOnUI {
                 textView.append(p0.toChar().toString())
             }
         }
         override fun write(b: ByteArray?) {
-            CoroutinesUtils.runOnUI {
+            runOnUI {
                 textView.append("\n" + b?.toString(Charsets.UTF_8))
             }
         }
