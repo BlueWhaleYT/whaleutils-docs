@@ -59,6 +59,11 @@
       "name": "module: [network]",
       "icon": "globe",
       "url": "pages/modules/network"
+    },
+    {
+      "name": "module: [sora-editor]",
+      "icon": "code",
+      "url": "pages/modules/sora-editor"
     }
   ],
   "navigation": [
@@ -99,6 +104,11 @@
         "group": "OkHttp",
         "pages": ["pages/modules/network/api-request/okhttp/api-request"]
       }]
+    },
+
+    {
+      "group": "TextMate",
+      "pages": ["pages/modules/sora-editor/easy-use-textmate"]
     }
   ]
 }

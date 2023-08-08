@@ -1,0 +1,30 @@
+---
+icon: book
+title: Easy-to-use TextMate
+---
+
+[Sora Editor](https://github.com/Rosemoe/sora-editor) supports TextMate syntax highlighting through `language-textmate` module, while it might take times for developers to write codes to apply textmate themes and languages.
+
+Developers might need:
+1. Find available textmate themes and languages
+2. Setup all languages and apply into language base, with language configurations set.
+3. Write codes provided from the APIs of `language-textmate` module
+
+This might make them feel fatigued. Therefore, this utils here.
+
+<Note>
+**More efficent!**
+
+TextMate resources will also be provided once you've imported `sora-editor` module. You can also add additional resources on your own when necessary. More resources will be continuously provided in the future.
+</Note>
+
+---
+
+## Set the language to the editor
+
+Basically, **you have nothing to do** if you use the assets of this module, just set the language to the editor and you're done!
+
+```kt
+val textMateUtils = TextMateUtils(this, editor)
+textMateUtils.applyLanguage("java")
+```
